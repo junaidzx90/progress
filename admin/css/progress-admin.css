@@ -1,0 +1,101 @@
+/**
+ * All of the CSS for your admin-specific functionality should be
+ * included in this file.
+ */
+ #entries_table tr{
+    text-align: left !important;
+ }
+ div#add_entry_wrap {
+    margin: 35px 0px;
+}
+div#progress_wrap {
+    width: 98%;
+}
+div#progress_popup,.edit_popup {
+    position: fixed;
+    left: 34%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    border: 1px solid #ddd;
+    background: #fff;
+    width: 300px;
+    z-index: 99;
+    box-shadow: 0 0 8px -5px black;
+}
+.edit_popup h4,
+div#progress_popup h4 {
+    margin-top: 0px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 4px;
+    position: relative;
+}
+span.close_popup {
+    position: absolute;
+    right: 0;
+    transform: rotate(
+45deg
+);
+    font-size: 30px;
+    top: -18px;
+    right: -20px;
+    color: red;
+    cursor: pointer;
+}
+.title{
+    width: 100% !important;
+}
+.del-entry{
+    border-color: #ff6b6b !important;
+    color: #ff6b6b !important;
+}
+.del-entry:focus{
+    box-shadow: 0 0 0 1px #ff6b6b !important;
+}
+span.warning{
+    color: #ff0000;
+    padding: 5px;
+    border: 1px solid #ddd;
+    display: inline-block;
+    margin-bottom: 10px;
+    border-left: inset;
+    border-left-color: #ff000070;
+    letter-spacing: 1.3px;
+    background-color: #ffebeb;
+}
+.random,.inputs {
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+}
+.random input,.inputs input, .inputs select{
+    width: 48%;
+}
+.single_inp input{
+    width: 100% !important;
+}
+.inputs label {
+    display: flex;
+    flex-direction: column;
+    width: 25%;
+    padding: 5px;
+    border: 1px solid #ddd;
+    margin: 2px;
+}
+.inputs label:first-child{
+    margin-left: 0;
+}
+.inputs label:last-child{
+    margin-right: 0;
+}
+.inputs label input {
+    width: 100%;
+    cursor: pointer;
+}
+div#progress_opt_tbl {
+    width: 27%;
+}
+.edit_popup {
+    left: 65%;
+    display: none;
+}

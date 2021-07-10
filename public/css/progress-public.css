@@ -1,0 +1,21 @@
+/**
+ * All of the CSS for your public-facing functionality should be
+ * included in this file.
+ */
+ .progress_entry {
+    display: inline-block;
+}
+ .p__entry {
+    display: flex;
+    justify-content: space-between;
+}
+.p__entry span {
+    margin-left: 10px;
+}
+.p__entry span:first-child{
+    margin-left: 0;
+}
+.progress_entry {
+    display: inline-block;
+    padding: 5px 0px;
+}
