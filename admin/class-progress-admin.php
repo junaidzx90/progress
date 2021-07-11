@@ -133,7 +133,7 @@ class Progress_Admin {
 				die;
 			}
 
-			if(!empty($entryName) && !empty($leftslot) && !empty($rightSlot) && $number !== 0 || ($min !== 0 && $max !== 0 && $seconds !== 0)){
+			if(!empty($entryName) && !empty($leftslot) && !empty($rightSlot) && $number !== 0 || ($min !== 0 && $max !== 0)){
 				$insert = $wpdb->insert($wpdb->prefix.'progress_entries_v2',array(
 					'entryname' 	=> $entryName,
 					'leftslot' 		=> $leftslot,

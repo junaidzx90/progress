@@ -63,11 +63,13 @@ span.warning{
     letter-spacing: 1.3px;
     background-color: #ffebeb;
 }
+.countdown,.edit_countdown,
 .random,.inputs {
     margin-bottom: 6px;
     display: flex;
     justify-content: space-between;
 }
+.countdown input,.edit_countdown input,
 .random input,.inputs input, .inputs select{
     width: 48%;
 }

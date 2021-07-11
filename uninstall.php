@@ -29,8 +29,3 @@
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
-
-global $wpdb;
-$wpdb->query( "DROP TABLE IF EXISTS `{$wpdb->prefix}progress_entries`" );
-$wpdb->query( "DROP TABLE IF EXISTS `{$wpdb->prefix}progress_entries_v1`" );
-$wpdb->query( "DROP TABLE IF EXISTS `{$wpdb->prefix}progress_entries_v3`" );

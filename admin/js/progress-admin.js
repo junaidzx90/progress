@@ -9,8 +9,10 @@ var app = new Vue({
 		edit_types: '',
 		edit_numberInp: true,
 		edit_randomInp: false,
+		edit_countdown: false,
 		numberInp: true,
 		randomInp: false,
+		countdownInp: false,
 		
 		textcolor: '#666666',
 		numbercolor: '#666666',
@@ -35,7 +37,6 @@ var app = new Vue({
 		},
 		closeeditpopup: function () {
 			this.edit_borderswitch = false;
-			jQuery('.borderswitch').prop('checked', false); 
 		},
 		borderswitched: function () {
 			if (this.borderswitch === true) {
@@ -46,16 +47,32 @@ var app = new Vue({
 		},
 		current_type: function (event) {
 			this.types = event.target.value
+			if (this.types == 'countdown') {
+				this.numberInp 	= false;
+				this.randomInp 	= false;
+				this.countdownInp 	= true;
+				this.single 	= 0;
+				this.min 		= 0;
+				this.max 		= 0;
+				this.seconds 	= 0;
+			}
 			if (this.types == 'random') {
 				this.single 	= 0;
+				this.min 		= 0;
+				this.max 		= 0;
+				this.seconds 	= 0;
 				this.numberInp 	= false;
+				this.countdownInp 	= false;
 				this.randomInp 	= true;
 			}
 			if (this.types == 'single') {
 				this.numberInp 	= true;
 				this.randomInp 	= false;
+				this.countdownInp 	= false;
+				this.single 	= 0;
 				this.min 		= 0;
 				this.max 		= 0;
+				this.seconds 	= 0;
 			}
 		},
 		edit_current_type: function (event) {
@@ -63,13 +80,21 @@ var app = new Vue({
 			jQuery('.edit_number').val(0);
 			jQuery('.edit_min').val(0);
 			jQuery('.edit_max').val(0);
+			jQuery('.edit_countdown').val(0);
 			if (this.edit_types == 'random') {
 				this.edit_numberInp 	= false;
 				this.edit_randomInp 	= true;
+				this.edit_countdown 	= false;
+			}
+			if (this.edit_types == 'edit_countdown') {
+				this.edit_numberInp 	= false;
+				this.edit_randomInp 	= false;
+				this.edit_countdown 	= true;
 			}
 			if (this.edit_types == 'single') {
 				this.edit_numberInp 	= true;
 				this.edit_randomInp 	= false;
+				this.edit_countdown 	= false;
 			}
 		},
 		delete_entry: function (id) {
@@ -94,10 +119,17 @@ var app = new Vue({
 			let types = jQuery('.edittype'+id).val();
 			if (types == 'random') {
 				this.edit_randomInp = true;
+				this.edit_countdown = false;
+				this.edit_numberInp = false;
+			}
+			if (types == 'edit_countdown') {
+				this.edit_countdown = true;
+				this.edit_randomInp = false;
 				this.edit_numberInp = false;
 			}
 			if (types == 'single') {
 				this.edit_randomInp = false;
+				this.edit_countdown = false;
 				this.edit_numberInp = true;
 			}
 		},
@@ -189,6 +221,12 @@ var app = new Vue({
 			let bordercolor = this.bordercolor;
 			let fontsize = this.fontsize;
 
+			if (this.countdownInp == true && (seconds == '' || seconds == '0')) {
+				this.warning = "Trying without required values!";
+				parent.isDisabled = false;
+				return false;
+			}
+
 			let data = {entryName,leftSlot, number, min, max, rightSlot, textcolor, numbercolor, bordercolor, fontsize,seconds,borderswitch};
 
 			jQuery.ajax({
@@ -219,17 +257,17 @@ var app = new Vue({
 jQuery(function ($) {
 	$('#entries_table').dataTable();
 	$('.edit-entry').each(function () {
-		$(this).on('click', function () {
+		$(document).on('click','.edit-entry', function () {
 			$('.edit_popup').hide();
 			$(this).parent().children('.edit_popup').show();
 		});
 	});
-	$('.closeedit').on('click', function () {
+	$(document).on('click','.closeedit', function () {
 		$(this).parent().parent().hide();
 	});
 
 	$('.borderswitch').each(function () {
-		$(this).on("change", function () {
+		$(document).on("change",'.borderswitch', function () {
 			if ($(this).prop('checked') == true) {
 				$(this).parent().next().children('label[for="bordercolor"]').show();
 			} else {

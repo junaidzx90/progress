@@ -50,6 +50,7 @@
                     <select @change="current_type(event)" id="types" class="type">
                         <option value="single">Single</option>
                         <option value="random">Random</option>
+                        <option value="countdown">Countdown</option>
                     </select>
                 </div>
                 
@@ -58,6 +59,11 @@
                 </div>
 
                 <div v-if="randomInp" class="random">
+                    <input v-model="min" type="number" placeholder="Min">&nbsp;
+                    <input v-model="max" type="number" placeholder="Max">
+                </div>
+
+                <div v-if="countdownInp" class="countdown">
                     <input v-model="min" type="number" placeholder="Min">&nbsp;
                     <input v-model="max" type="number" placeholder="Max">&nbsp;
                     <input v-model="seconds" type="number" placeholder="Seconds">
@@ -156,7 +162,8 @@
 
                                             <select @change="edit_current_type(event)" class="type edittypes edittype<?php echo $result->ID ?>">
                                                 <option <?php echo ($result->number > 0)?'selected':'' ?> value="single">Single</option>
-                                                <option <?php echo ($result->min > 0 && $result->max > 0 )?'selected':'' ?> value="random">Random</option>
+                                                <option <?php echo ($result->min > 0 && $result->max > 0 && $result->seconds == 0)?'selected':'' ?> value="random">Random</option>
+                                                <option <?php echo ($result->min > 0 && $result->max > 0 && $result->seconds > 0 )?'selected':'' ?> value="edit_countdown">Countdown</option>
                                             </select>
                                         </div>
                                         
@@ -165,6 +172,11 @@
                                         </div>
                                         
                                         <div v-if="edit_randomInp" class="random">
+                                            <input class="edit_min<?php echo $result->ID ?>" type="number" value="<?php echo $result->min ?>" placeholder="Min">&nbsp;
+                                            <input class="edit_max<?php echo $result->ID ?>" type="number" value="<?php echo $result->max ?>" placeholder="Max">
+                                        </div>
+
+                                        <div v-if="edit_countdown" class="edit_countdown">
                                             <input class="edit_min<?php echo $result->ID ?>" type="number" value="<?php echo $result->min ?>" placeholder="Min">&nbsp;
                                             <input class="edit_max<?php echo $result->ID ?>" type="number" value="<?php echo $result->max ?>" placeholder="Max">&nbsp;
                                             <input class="edit_seconds<?php echo $result->ID ?>" type="number" value="<?php echo $result->seconds; ?>" placeholder="Seconds">
