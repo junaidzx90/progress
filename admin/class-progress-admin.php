@@ -84,6 +84,21 @@ class Progress_Admin {
 
 	function progress_menupage(){
 		add_menu_page( 'Progress', 'Progress', 'manage_options', 'progress', [$this,'progress_menupage_view'], 'dashicons-smiley', 45 );
+
+		// options
+		add_settings_section( 'progress_settings_section', '', '', 'progress_settings_page' );
+
+		add_settings_field( 'progress_font_size', 'Font size', [$this,'progress_font_size_cb'], 'progress_settings_page', 'progress_settings_section');
+		register_setting( 'progress_settings_section', 'progress_font_size');
+
+		add_settings_field( 'progress_text_color', 'Text color', [$this,'progress_text_color_cb'], 'progress_settings_page', 'progress_settings_section');
+		register_setting( 'progress_settings_section', 'progress_text_color');
+
+		add_settings_field( 'progress_number', 'Number color', [$this,'progress_number_cb'], 'progress_settings_page', 'progress_settings_section');
+		register_setting( 'progress_settings_section', 'progress_number');
+
+		add_settings_field( 'progress_border_color', 'Border color', [$this,'progress_border_color_cb'], 'progress_settings_page', 'progress_settings_section');
+		register_setting( 'progress_settings_section', 'progress_border_color');
 	}
 
 	function progress_menupage_view(){
@@ -99,29 +114,41 @@ class Progress_Admin {
 			$number 	= intval($data['number']);
 			$min 		= intval($data['min']);
 			$max 		= intval($data['max']);
+			$seconds 	= intval($data['seconds']);
 			$textcolor 	= $data['textcolor'];
 			$numbercolor 	= $data['numbercolor'];
+			$borderswitch 	= $data['borderswitch'];
+			$bordercolor 	= $data['bordercolor'];
 			$fontsize 	= intval($data['fontsize']);
 			$rightSlot 	= sanitize_text_field($data['rightSlot']);
 
-			if($id = $wpdb->get_var("SELECT ID FROM {$wpdb->prefix}progress_entries_v3 WHERE entryname = '$entryName'")){
+			if($borderswitch == 'false'){
+				$borderswitch = 0;
+			}else{
+				$borderswitch = 1;
+			}
+
+			if($id = $wpdb->get_var("SELECT ID FROM {$wpdb->prefix}progress_entries_v2 WHERE entryname = '$entryName'")){
 				echo json_encode(array('error' => 'This entry is already exist.'));
 				die;
 			}
 
-			if(!empty($entryName) && !empty($leftslot) && !empty($rightSlot) && $number !== 0 || ($min !== 0 && $max !== 0)){
-				$insert = $wpdb->insert($wpdb->prefix.'progress_entries_v3',array(
+			if(!empty($entryName) && !empty($leftslot) && !empty($rightSlot) && $number !== 0 || ($min !== 0 && $max !== 0 && $seconds !== 0)){
+				$insert = $wpdb->insert($wpdb->prefix.'progress_entries_v2',array(
 					'entryname' 	=> $entryName,
 					'leftslot' 		=> $leftslot,
 					'rightslot' 	=> $rightSlot,
 					'number'	 	=> $number,
 					'min'	 		=> $min,
 					'max'	 		=> $max,
+					'seconds'	 	=> $seconds,
 					'textcolor' 	=> $textcolor,
 					'numbercolor' 	=> $numbercolor,
+					'bordercolor' 	=> $bordercolor,
+					'border_switch' => $borderswitch,
 					'fontsize' 		=> $fontsize,
 					'create_date' 	=> date('d-m-y'),
-				),array('%s','%s','%s','%d','%d','%d','%s','%s','%s','%s'));
+				),array('%s','%s','%s','%d','%d','%d','%d','%s','%s','%s','%d','%d','%s'));
 	
 				if($insert){
 					echo json_encode(array('success' => 'success'));
@@ -145,26 +172,38 @@ class Progress_Admin {
 			$entryName = sanitize_text_field($data['entryName']);
 			$textcolor = $data['textcolor'];
 			$numbercolor = $data['numbercolor'];
+			$borderswitch = $data['borderswitch'];
+			$bordercolor = $data['bordercolor'];
 			$fontsize = $data['fontsize'];
 			$edit_left = sanitize_text_field($data['edit_left']);
 			$edit_number = intval($data['edit_number']);
 			$edit_min = intval($data['edit_min']);
 			$edit_max = intval($data['edit_max']);
+			$seconds = intval($data['seconds']);
 			$edit_right = sanitize_text_field($data['edit_right']);
 
+			if(!$borderswitch || $borderswitch == 'false'){
+				$borderswitch = 0;
+			}else{
+				$borderswitch = 1;
+			}
+
 			if(!empty($entryName) && !empty($edit_left) && !empty($edit_right) && $edit_number !== 0 || ($edit_min !== 0 && $edit_max !== 0)){
-				$wpdb->update($wpdb->prefix.'progress_entries_v3',array(
+				$wpdb->update($wpdb->prefix.'progress_entries_v2',array(
 					'entryname' 	=> $entryName,
 					'leftslot' 		=> $edit_left,
 					'rightslot' 	=> $edit_right,
 					'number'	 	=> $edit_number,
 					'min'	 		=> $edit_min,
 					'max'	 		=> $edit_max,
+					'seconds'	 	=> $seconds,
 					'textcolor' 	=> $textcolor,
 					'numbercolor' 	=> $numbercolor,
+					'bordercolor' 	=> $bordercolor,
+					'border_switch' => $borderswitch,
 					'fontsize' 		=> $fontsize
 				),array('ID' => $entry_id),array(
-					'%s','%s','%s','%d','%d','%d','%s','%s','%s'
+					'%s','%s','%s','%d','%d','%d','%d','%s','%s','%s','%d','%d'
 				),array('%d'));
 
 				echo json_encode(array('success' => 'Success'));
@@ -182,7 +221,7 @@ class Progress_Admin {
 		if(isset($_POST['entry_id'])){
 			$entry_id = intval($_POST['entry_id']);
 			global $wpdb;
-			if($wpdb->query("DELETE FROM {$wpdb->prefix}progress_entries_v3 WHERE ID = $entry_id")){
+			if($wpdb->query("DELETE FROM {$wpdb->prefix}progress_entries_v2 WHERE ID = $entry_id")){
 				echo 'Deleted';
 				die;
 			}

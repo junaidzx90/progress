@@ -99,3 +99,53 @@ div#progress_opt_tbl {
     left: 65%;
     display: none;
 }
+.checkbox-inputs {
+    margin: 10px 0px;
+    display: block;
+    height: 8px;
+}
+input[type="checkbox"] {
+    float: left;
+    width: 42px;
+    height: 17px;
+    cursor: pointer;
+    background-color: rgb(170 170 170 / 30%);
+    -webkit-appearance: none;
+    border-radius: 8px;
+    position: relative;
+}
+  
+input[type="checkbox"]:before {
+    content: "" !important;
+    width: 1.3125rem;
+    height: 1.3125rem;
+    background-color: #bfbfbf;
+    border-radius: 50%;
+    position: absolute;
+    top: -3px;
+    z-index: 2;
+    left: -2px;
+    transition: all .2s linear;
+}
+  
+input[type="checkbox"]:after {
+    content: "" !important;
+    height: 100%;
+    width: 17px;
+    position: absolute;
+    left: 0;
+    z-index: 1;
+    border-radius: 17px;
+    background-color: rgb(51 174 184 / 30%);
+    transition: all .2s linear;
+}
+
+input[type="checkbox"]:checked:before {
+    left: calc(100% - 15px);
+    background-color: #2271b1;
+    top: 0;
+}
+input[type="checkbox"]:checked:after {
+    width: 100%;
+    border-radius: 8px;
+}

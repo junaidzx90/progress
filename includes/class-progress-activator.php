@@ -32,8 +32,9 @@ class Progress_Activator {
 	public static function activate() {
 		global $wpdb;
 		require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+		$wpdb->query( "DROP TABLE IF EXISTS `{$wpdb->prefix}progress_entries_v2`" );
 
-		$progress_entries = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}progress_entries_v3` (
+		$progress_entries = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}progress_entries_v2` (
 			`ID` INT NOT NULL AUTO_INCREMENT,
 			`entryname` VARCHAR(255) NOT NULL,
 			`leftslot` VARCHAR(255) NOT NULL,
@@ -41,8 +42,11 @@ class Progress_Activator {
 			`number` INT NOT NULL,
 			`min` INT NOT NULL,
 			`max` INT NOT NULL,
+			`seconds` INT NOT NULL,
 			`textcolor` VARCHAR(55) NOT NULL,
 			`numbercolor` VARCHAR(55) NOT NULL,
+			`border_switch` BOOLEAN NOT NULL,
+			`bordercolor` VARCHAR(55) NOT NULL,
 			`fontsize` 	INT NOT NULL,
 			`create_date` DATE NOT NULL,
 			PRIMARY KEY (`ID`)) ENGINE = InnoDB";

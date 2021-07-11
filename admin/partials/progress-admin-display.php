@@ -27,12 +27,18 @@
                 <div class="inputs">
                     <input v-model="entryName" class="title" type="text" placeholder="Entry name">
                 </div>
+                <div class="checkbox-inputs">
+                    <input class="switch" @change="borderswitched" type="checkbox">
+                </div>
                 <div class="inputs">
                     <label for="edit_">Text
                         <input v-model="textcolor" type="color" id="textcolor">
                     </label>
                     <label for="numbercolor">Number
                         <input v-model="numbercolor" type="color" id="numbercolor">
+                    </label>
+                    <label v-if="borderswitch" for="bordercolor">Border
+                        <input v-model="bordercolor" type="color" id="bordercolor">
                     </label>
                     <label for="fontsize">Font size
                         <input v-model="fontsize" type="number" id="fontsize">
@@ -52,8 +58,9 @@
                 </div>
 
                 <div v-if="randomInp" class="random">
-                    <input v-model="min" type="number" placeholder="Min">
-                    <input v-model="max" type="number" placeholder="Max">
+                    <input v-model="min" type="number" placeholder="Min">&nbsp;
+                    <input v-model="max" type="number" placeholder="Max">&nbsp;
+                    <input v-model="seconds" type="number" placeholder="Seconds">
                 </div>
                 
                 <div class="inputs">
@@ -85,7 +92,7 @@
                 <?php
                 global $wpdb;
 
-                $results = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}progress_entries_v3 ORDER BY ID DESC");
+                $results = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}progress_entries_v2 ORDER BY ID DESC");
                 if($results){
                     $i = 1;
                     foreach($results as $result){
@@ -105,11 +112,22 @@
                                 <button @click="delete_entry(<?php echo $result->ID ?>)" class="del-entry button-secondary">Delete</button>
 
                                 <div class="edit_popup">
-                                    <h4>Edit entry<span class="close_popup closeedit">+</span></h4>
+                                    <h4>Edit entry<span @click="closeeditpopup" class="close_popup closeedit">+</span></h4>
                                     <span v-if="warning" class="warning">{{warning}}</span>
                                     <div class="progress_contents">
                                         <div class="inputs">
                                             <input class="title edit_entryname<?php echo $result->ID ?>" type="text" value="<?php echo $result->entryname; ?>" placeholder="Entry name">
+                                        </div>
+                                        <div class="checkbox-inputs">
+                                            <?php
+                                            $switch = '';
+                                            if(intval($result->border_switch) == 1){
+                                                $switch = 'checked';
+                                            }else{
+                                                $switch = '';
+                                            }
+                                            ?>
+                                            <input <?php echo $switch ?> class="switch borderswitch bswitch<?php echo $result->ID ?>" type="checkbox">
                                         </div>
                                         <div class="inputs">
                                             <label for="textcolor">Text
@@ -117,6 +135,17 @@
                                             </label>
                                             <label for="numbercolor">Number
                                                 <input value="<?php echo $result->numbercolor; ?>" type="color" class="edit_numbercolor<?php echo $result->ID ?>">
+                                            </label>
+                                            <?php
+                                            $show = '';
+                                            if(intval($result->border_switch) == 1){
+                                                $show = 'style="display:block;"';
+                                            }else{
+                                                $show = 'style="display:none;"';
+                                            }
+                                            ?>
+                                            <label <?php echo $show; ?> for="bordercolor">Border
+                                                <input value="<?php echo $result->bordercolor; ?>" type="color" class="edit_bordercolor<?php echo $result->ID ?>">
                                             </label>
                                             <label for="fontsize">Font size
                                                 <input value="<?php echo $result->fontsize; ?>" type="number" class="edit_fontsize<?php echo $result->ID ?>">
@@ -136,8 +165,9 @@
                                         </div>
                                         
                                         <div v-if="edit_randomInp" class="random">
-                                            <input class="edit_min<?php echo $result->ID ?>" type="number" value="<?php echo $result->min ?>" placeholder="Min">
-                                            <input class="edit_max<?php echo $result->ID ?>" type="number" value="<?php echo $result->max ?>" placeholder="Max">
+                                            <input class="edit_min<?php echo $result->ID ?>" type="number" value="<?php echo $result->min ?>" placeholder="Min">&nbsp;
+                                            <input class="edit_max<?php echo $result->ID ?>" type="number" value="<?php echo $result->max ?>" placeholder="Max">&nbsp;
+                                            <input class="edit_seconds<?php echo $result->ID ?>" type="number" value="<?php echo $result->seconds; ?>" placeholder="Seconds">
                                         </div>
                                         
                                         <div class="inputs">

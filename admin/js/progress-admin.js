@@ -4,6 +4,7 @@ var app = new Vue({
 		isDisabled: false,
 		warning: '',
 		popup: false,
+		borderswitch: false,
 		types: '',
 		edit_types: '',
 		edit_numberInp: true,
@@ -13,12 +14,14 @@ var app = new Vue({
 		
 		textcolor: '#666666',
 		numbercolor: '#666666',
+		bordercolor: '#666666',
 		fontsize: '18',
 		entryName: '',
 		leftslot: '',
 		single: 0,
 		min: 0,
 		max: 0,
+		seconds: 30,
 		rightslot: '',
 		// table data
 		tableData: []
@@ -28,10 +31,18 @@ var app = new Vue({
 			this.popup = true;
 		},
 		closepopup: function () {
-			this.popup = false
+			this.popup = false;
 		},
-		closeedit: function () {
-			
+		closeeditpopup: function () {
+			this.edit_borderswitch = false;
+			jQuery('.borderswitch').prop('checked', false); 
+		},
+		borderswitched: function () {
+			if (this.borderswitch === true) {
+				this.borderswitch = false;
+			} else {
+				this.borderswitch = true;
+			}
 		},
 		current_type: function (event) {
 			this.types = event.target.value
@@ -96,12 +107,21 @@ var app = new Vue({
 			let entry_id = id;
 			let entryName = jQuery('.edit_entryname'+entry_id).val();
 			let textcolor = jQuery('.edit_textcolor'+entry_id).val();
-			let numbercolor = jQuery('.edit_numbercolor'+entry_id).val();
+			let numbercolor = jQuery('.edit_numbercolor' + entry_id).val();
+			let borderswitch = '';
+			if (jQuery('.bswitch' + entry_id).prop('checked') == true) {
+				borderswitch = 'true';
+			} else {
+				borderswitch = 'false';
+			}
+			
+			let bordercolor = jQuery('.edit_bordercolor'+entry_id).val();
 			let fontsize = jQuery('.edit_fontsize'+entry_id).val();
 			let edit_left = jQuery('.edit_left'+entry_id).val();
 			let edit_number = jQuery('.edit_number'+entry_id).val();
 			let edit_min = jQuery('.edit_min'+entry_id).val();
 			let edit_max = jQuery('.edit_max'+entry_id).val();
+			let seconds = jQuery('.edit_seconds'+entry_id).val();
 			let edit_right = jQuery('.edit_right'+entry_id).val();
 
 			if (!edit_number) {
@@ -113,20 +133,26 @@ var app = new Vue({
 			if (!edit_max) {
 				edit_max = 0;
 			}
+			if (!seconds) {
+				seconds = 0;
+			}
 
 			let data = {
 				entry_id,
 				entryName,
 				textcolor,
 				numbercolor,
+				borderswitch,
+				bordercolor,
 				fontsize,
 				edit_left,
 				edit_number,
 				edit_min,
 				edit_max,
+				seconds,
 				edit_right
 			};
-
+			
 			jQuery.ajax({
 				type: "post",
 				url: progress_entries.ajaxurl,
@@ -154,13 +180,16 @@ var app = new Vue({
 			let number = this.single;
 			let min = this.min;
 			let max = this.max;
+			let seconds = this.seconds;
 			let rightSlot = this.rightslot;
 
 			let textcolor = this.textcolor;
 			let numbercolor = this.numbercolor;
+			let borderswitch = this.borderswitch;
+			let bordercolor = this.bordercolor;
 			let fontsize = this.fontsize;
 
-			let data = {entryName,leftSlot, number, min, max, rightSlot, textcolor, numbercolor, fontsize};
+			let data = {entryName,leftSlot, number, min, max, rightSlot, textcolor, numbercolor, bordercolor, fontsize,seconds,borderswitch};
 
 			jQuery.ajax({
 				type: "post",
@@ -197,5 +226,16 @@ jQuery(function ($) {
 	});
 	$('.closeedit').on('click', function () {
 		$(this).parent().parent().hide();
+	});
+
+	$('.borderswitch').each(function () {
+		$(this).on("change", function () {
+			if ($(this).prop('checked') == true) {
+				$(this).parent().next().children('label[for="bordercolor"]').show();
+			} else {
+				$(this).removeAttr('checked')
+				$(this).parent().next().children('label[for="bordercolor"]').hide();
+			}
+		});
 	});
 });

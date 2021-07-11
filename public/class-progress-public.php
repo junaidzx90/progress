@@ -62,7 +62,7 @@ class Progress_Public {
 	 */
 	public function enqueue_styles() {
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/progress-public.css', array(), microtime(), 'all' );
+		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/progress-public.css', array(), $this->version, 'all' );
 
 	}
 
@@ -85,7 +85,7 @@ class Progress_Public {
 		}
 		
 		global $wpdb;
-		$results = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}progress_entries_v3 WHERE ID = $entry_id");
+		$results = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}progress_entries_v2 WHERE ID = $entry_id");
 
 		if($results){
 			require plugin_dir_path( __FILE__ )."partials/progress-public-display.php";
