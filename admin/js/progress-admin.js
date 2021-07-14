@@ -12,7 +12,7 @@ var app = new Vue({
 		edit_countdown: false,
 		numberInp: true,
 		randomInp: false,
-		countdownInp: false,
+		countableInp: false,
 		
 		textcolor: '#666666',
 		numbercolor: '#666666',
@@ -25,6 +25,8 @@ var app = new Vue({
 		max: 0,
 		seconds: 30,
 		rightslot: '',
+		countup: 0,
+		editcountup: 0,
 		// table data
 		tableData: []
 	},
@@ -47,14 +49,25 @@ var app = new Vue({
 		},
 		current_type: function (event) {
 			this.types = event.target.value
-			if (this.types == 'countdown') {
+			if (this.types == 'countup') {
 				this.numberInp 	= false;
 				this.randomInp 	= false;
-				this.countdownInp 	= true;
+				this.countableInp 	= true;
 				this.single 	= 0;
 				this.min 		= 0;
 				this.max 		= 0;
 				this.seconds 	= 0;
+				this.countup 	= 1;
+			}
+			if (this.types == 'countdown') {
+				this.numberInp 	= false;
+				this.randomInp 	= false;
+				this.countableInp 	= true;
+				this.single 	= 0;
+				this.min 		= 0;
+				this.max 		= 0;
+				this.seconds 	= 0;
+				this.countup 	= 0;
 			}
 			if (this.types == 'random') {
 				this.single 	= 0;
@@ -62,17 +75,19 @@ var app = new Vue({
 				this.max 		= 0;
 				this.seconds 	= 0;
 				this.numberInp 	= false;
-				this.countdownInp 	= false;
+				this.countableInp 	= false;
 				this.randomInp 	= true;
+				this.countup 	= 0;
 			}
 			if (this.types == 'single') {
 				this.numberInp 	= true;
 				this.randomInp 	= false;
-				this.countdownInp 	= false;
+				this.countableInp 	= false;
 				this.single 	= 0;
 				this.min 		= 0;
 				this.max 		= 0;
 				this.seconds 	= 0;
+				this.countup 	= 0;
 			}
 		},
 		edit_current_type: function (event) {
@@ -80,21 +95,30 @@ var app = new Vue({
 			jQuery('.edit_number').val(0);
 			jQuery('.edit_min').val(0);
 			jQuery('.edit_max').val(0);
-			jQuery('.edit_countdown').val(0);
+			jQuery('.edit_countup').val(0);
 			if (this.edit_types == 'random') {
 				this.edit_numberInp 	= false;
 				this.edit_randomInp 	= true;
 				this.edit_countdown 	= false;
+				this.editcountup 		= 0;
+			}
+			if (this.edit_types == 'edit_countup') {
+				this.edit_numberInp 	= false;
+				this.edit_randomInp 	= false;
+				this.edit_countdown 	= true;
+				this.editcountup 		= 1;
 			}
 			if (this.edit_types == 'edit_countdown') {
 				this.edit_numberInp 	= false;
 				this.edit_randomInp 	= false;
 				this.edit_countdown 	= true;
+				this.editcountup 		= 0;
 			}
 			if (this.edit_types == 'single') {
 				this.edit_numberInp 	= true;
 				this.edit_randomInp 	= false;
 				this.edit_countdown 	= false;
+				this.editcountup 		= 0;
 			}
 		},
 		delete_entry: function (id) {
@@ -121,16 +145,25 @@ var app = new Vue({
 				this.edit_randomInp = true;
 				this.edit_countdown = false;
 				this.edit_numberInp = false;
+				this.editcountup 	= 0;
+			}
+			if (types == 'edit_countup') {
+				this.edit_countdown = true;
+				this.edit_randomInp = false;
+				this.edit_numberInp = false;
+				this.editcountup 	= 1;
 			}
 			if (types == 'edit_countdown') {
 				this.edit_countdown = true;
 				this.edit_randomInp = false;
 				this.edit_numberInp = false;
+				this.editcountup 	= 0;
 			}
 			if (types == 'single') {
 				this.edit_randomInp = false;
 				this.edit_countdown = false;
 				this.edit_numberInp = true;
+				this.editcountup 	= 0;
 			}
 		},
 		update_entry: function (id) {
@@ -155,7 +188,7 @@ var app = new Vue({
 			let edit_max = jQuery('.edit_max'+entry_id).val();
 			let seconds = jQuery('.edit_seconds'+entry_id).val();
 			let edit_right = jQuery('.edit_right'+entry_id).val();
-
+			let editcountup = this.editcountup;
 			if (!edit_number) {
 				edit_number = 0;
 			}
@@ -182,6 +215,7 @@ var app = new Vue({
 				edit_min,
 				edit_max,
 				seconds,
+				editcountup,
 				edit_right
 			};
 			
@@ -214,6 +248,7 @@ var app = new Vue({
 			let max = this.max;
 			let seconds = this.seconds;
 			let rightSlot = this.rightslot;
+			let countup = this.countup;
 
 			let textcolor = this.textcolor;
 			let numbercolor = this.numbercolor;
@@ -221,13 +256,17 @@ var app = new Vue({
 			let bordercolor = this.bordercolor;
 			let fontsize = this.fontsize;
 
-			if (this.countdownInp == true && (seconds == '' || seconds == '0')) {
+			if (this.single > 0) {
+				seconds = 0;
+			}
+
+			if (this.countableInp == true && (seconds == '' || seconds == '0')) {
 				this.warning = "Trying without required values!";
 				parent.isDisabled = false;
 				return false;
 			}
 
-			let data = {entryName,leftSlot, number, min, max, rightSlot, textcolor, numbercolor, bordercolor, fontsize,seconds,borderswitch};
+			let data = {entryName,leftSlot, number, min, max, rightSlot, countup, textcolor, numbercolor, bordercolor, fontsize,seconds,borderswitch};
 
 			jQuery.ajax({
 				type: "post",

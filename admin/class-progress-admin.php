@@ -115,6 +115,7 @@ class Progress_Admin {
 			$min 		= intval($data['min']);
 			$max 		= intval($data['max']);
 			$seconds 	= intval($data['seconds']);
+			$countup 	= intval($data['countup']);
 			$textcolor 	= $data['textcolor'];
 			$numbercolor 	= $data['numbercolor'];
 			$borderswitch 	= $data['borderswitch'];
@@ -142,13 +143,14 @@ class Progress_Admin {
 					'min'	 		=> $min,
 					'max'	 		=> $max,
 					'seconds'	 	=> $seconds,
+					'countup'	 	=> $countup,
 					'textcolor' 	=> $textcolor,
 					'numbercolor' 	=> $numbercolor,
 					'bordercolor' 	=> $bordercolor,
 					'border_switch' => $borderswitch,
 					'fontsize' 		=> $fontsize,
 					'create_date' 	=> date('d-m-y'),
-				),array('%s','%s','%s','%d','%d','%d','%d','%s','%s','%s','%d','%d','%s'));
+				),array('%s','%s','%s','%d','%d','%d','%d','%d','%s','%s','%s','%d','%d','%s'));
 	
 				if($insert){
 					echo json_encode(array('success' => 'success'));
@@ -180,6 +182,7 @@ class Progress_Admin {
 			$edit_min = intval($data['edit_min']);
 			$edit_max = intval($data['edit_max']);
 			$seconds = intval($data['seconds']);
+			$editcountup = intval($data['editcountup']);
 			$edit_right = sanitize_text_field($data['edit_right']);
 
 			if(!$borderswitch || $borderswitch == 'false'){
@@ -197,13 +200,14 @@ class Progress_Admin {
 					'min'	 		=> $edit_min,
 					'max'	 		=> $edit_max,
 					'seconds'	 	=> $seconds,
+					'countup'	 	=> $editcountup,
 					'textcolor' 	=> $textcolor,
 					'numbercolor' 	=> $numbercolor,
 					'bordercolor' 	=> $bordercolor,
 					'border_switch' => $borderswitch,
 					'fontsize' 		=> $fontsize
 				),array('ID' => $entry_id),array(
-					'%s','%s','%s','%d','%d','%d','%d','%s','%s','%s','%d','%d'
+					'%s','%s','%s','%d','%d','%d','%d','%d','%s','%s','%s','%d','%d'
 				),array('%d'));
 
 				echo json_encode(array('success' => 'Success'));

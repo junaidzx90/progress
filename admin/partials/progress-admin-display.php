@@ -50,6 +50,7 @@
                     <select @change="current_type(event)" id="types" class="type">
                         <option value="single">Single</option>
                         <option value="random">Random</option>
+                        <option value="countup">CountUp</option>
                         <option value="countdown">Countdown</option>
                     </select>
                 </div>
@@ -63,7 +64,7 @@
                     <input v-model="max" type="number" placeholder="Max">
                 </div>
 
-                <div v-if="countdownInp" class="countdown">
+                <div v-if="countableInp" class="countdown">
                     <input v-model="min" type="number" placeholder="Min">&nbsp;
                     <input v-model="max" type="number" placeholder="Max">&nbsp;
                     <input v-model="seconds" type="number" placeholder="Seconds">
@@ -163,7 +164,8 @@
                                             <select @change="edit_current_type(event)" class="type edittypes edittype<?php echo $result->ID ?>">
                                                 <option <?php echo ($result->number > 0)?'selected':'' ?> value="single">Single</option>
                                                 <option <?php echo ($result->min > 0 && $result->max > 0 && $result->seconds == 0)?'selected':'' ?> value="random">Random</option>
-                                                <option <?php echo ($result->min > 0 && $result->max > 0 && $result->seconds > 0 )?'selected':'' ?> value="edit_countdown">Countdown</option>
+                                                <option <?php echo ($result->min > 0 && $result->max > 0 && $result->seconds > 0 && $result->countup > 0 )?'selected':'' ?> value="edit_countup">CountUp</option>
+                                                <option <?php echo ($result->min > 0 && $result->max > 0 && $result->seconds > 0 && $result->countup == 0)?'selected':'' ?> value="edit_countdown">Countdown</option>
                                             </select>
                                         </div>
                                         

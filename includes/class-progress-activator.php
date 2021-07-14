@@ -43,6 +43,7 @@ class Progress_Activator {
 			`min` INT NOT NULL,
 			`max` INT NOT NULL,
 			`seconds` INT NOT NULL,
+			`countup` INT NOT NULL,
 			`textcolor` VARCHAR(55) NOT NULL,
 			`numbercolor` VARCHAR(55) NOT NULL,
 			`border_switch` BOOLEAN NOT NULL,

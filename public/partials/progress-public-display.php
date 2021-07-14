@@ -36,11 +36,17 @@ if($style->border_switch == '1'){
             ?>
             <script>
                 <?php
+
+                $oparator = '-=';
+                if($result->countup > 0){
+                    $oparator = '+=';
+                }
+
                 if($result->min !== '0' && $result->max !== '0' && $result->seconds !== '0'){ ?>
                     let nmcounter<?php echo $entry_id ?> = document.getElementById('ncdn<?php echo $entry_id ?>');
                     let current_val<?php echo $entry_id ?> = parseInt(nmcounter<?php echo $entry_id ?>.textContent);
                     var decrementCounter<?php echo $entry_id ?> = setInterval(function(){
-                        current_val<?php echo $entry_id ?> -= 1;
+                        current_val<?php echo $entry_id ?> <?php echo $oparator ?> 1;
                         nmcounter<?php echo $entry_id ?>.innerText = current_val<?php echo $entry_id ?>;
                         if(current_val<?php echo $entry_id ?> == 1){
                             clearInterval(decrementCounter<?php echo $entry_id ?>);
